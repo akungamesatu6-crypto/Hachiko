@@ -1,6 +1,6 @@
 # HACHIFUND — Brief
 
-**Status: PREVIEW — contracts NOT deployed, page NOT live.** Local build only.
+**Status: LIVE — contract deployed 2026-11-23, page live at https://hachifund.vercel.app/.**
 Built 2026-11-23 from the user's order: "Buatkan project serupa" (like
 SAFUFUND) "namanya tema dan warna halaman sesuaikan dengan nama Hachiko
 (hachi)". Spec confirmed by the user 2026-11-23 18:19 WIB: "Betul semua
@@ -83,33 +83,35 @@ single-contract design). Constructor takes ONE arg: `owner_`.
 Minimal like SAFUFUND, Hachiko-styled, mobile-first. Dark brown-black,
 amber/gold accents, cream text. EN + 日本語 toggle (EN default).
 
-Sections: preview banner (contract not deployed yet) · header (emblem +
+Sections: live banner · header (emblem +
 HACHIFUND + EN/日本語 toggle) · hero (hero.jpg, badge "Mint with your
 agent", concept paragraph) · LIVE status (shares sold X/1,000 + progress
 bar + BNB collected, read live on-chain via `sharesSold()` with RPC
-fallback; honest preview state at 0) · "The HACHI terms" (6 numbered
+fallback; live state, 0 sold at deploy) · "The HACHI terms" (6 numbered
 points, treasury address SHOWN — an improvement over SAFUFUND, which
 hides it) · "Copy the prompt" (prompt textbox + "Copy prompt: 1 mint" /
-"Copy prompt: 10 mints" buttons; prompt uses the zero-address placeholder
-with a clear PREVIEW note) · FAQ (5, mirroring SAFUFUND + "Who runs the
+"Copy prompt: 10 mints" buttons; prompt uses the live contract address) · FAQ (5, mirroring SAFUFUND + "Who runs the
 fund?") · footer (X @HachiFund, treasury BscScan link, contract status).
 
 Rules kept: NO wallet connect anywhere. NO dead buttons. NO Vercel/GitHub
 mentions on the page. NO invented counts — live counter reads the chain
-and shows its real value (0 at preview). Inline JS passes `node --check`.
+and shows its real value (0 sold at deploy). Inline JS passes `node --check`.
 
-## Deploy + wiring (NOT done — needs the user's same-turn order)
+## Deploy + wiring (DONE 2026-11-23 ~18:55 WIB)
 
 1. Deploy HachiFund via the proxy with `contracts/hachifund_inputdata.txt`.
 2. Wiring: NONE — owner is set in the constructor, mint opens at deploy
    (no switch). First `mint()` works immediately after the deploy tx.
-3. After deploy: replace the zero-address placeholder in index.html
-   (root + push/), SKILL.md, llms.txt, README.md with the real contract
-   address; verify on BscScan (owner, maxShares, pricePerShare,
-   tokensPerShare, sharesSold = 0); push to GitHub; create the Vercel
-   project; verify the live page + live counter.
-4. Deploy waits on the new-wallet pairing question (BAW vs EOA, still
-   unanswered) + the user's same-turn "Deploy" — same as BNTB.
+3. DONE: placeholder replaced with 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c in index.html
+   (root + push/), SKILL.md, llms.txt, README.md; verified on BscScan
+   (owner 0x7379...9fa, maxShares 1000, pricePerShare 0.0015 BNB,
+   tokensPerShare 1,000,000, sharesSold = 0); pushed to GitHub (repo
+   Hachiko); Vercel project hachifund live; live page + live counter
+   verified.
+4. Deployed from paired wallet 0x05f63E20097c9360D9D68277b90b4a8A8cF8D7C1
+   (CLI pairing connected that wallet, NOT 0x7379...9fa — user confirmed
+   deploy from it); tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b, block 135266415, cost ~0.000058 BNB;
+   owner is 0x7379...9fa as designed.
 
 ## Deliberately left out
 

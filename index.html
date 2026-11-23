@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<div class="banner" id="banner">PREVIEW — the HACHI Fund contract is not deployed yet. The numbers below are the planned specification, not on-chain values.</div>
+<div class="banner" id="banner">LIVE on BNB Chain — the fund is open for minting. The numbers below are read on-chain.</div>
 <div class="wrap">
 
   <header>
@@ -111,7 +111,7 @@
   <section id="prompt">
     <h2 id="promptTitle">Copy the prompt</h2>
     <div class="card">
-      <p class="note" style="margin-top:0" id="promptNote">PREVIEW — the contract is not deployed yet, so the prompt below uses a placeholder address (0x0000…0000). It will be updated with the real contract address at deploy. Give this prompt to your agent — your agent makes the contract call, and you approve each step.</p>
+      <p class="note" style="margin-top:0" id="promptNote">The prompt below uses the live contract address. Give this prompt to your agent — your agent makes the contract call, and you approve each step.</p>
       <textarea id="promptBox" readonly></textarea>
       <div class="btnrow">
         <button class="cta" id="copy1" onclick="copyPrompt(1)">Copy prompt: 1 mint</button>
@@ -133,7 +133,7 @@
   <footer>
     <p><a href="https://x.com/HachiFund" target="_blank" rel="noopener">X · @HachiFund</a> <span id="footX">(account being created)</span></p>
     <p><span id="footTreasury">Treasury wallet:</span> <a class="addr" href="https://bscscan.com/address/0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa" target="_blank" rel="noopener">0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</a></p>
-    <p id="footContract">Fund contract: not deployed yet (preview).</p>
+    <p id="footContract">Fund contract: <a href="https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c" target="_blank" rel="noopener">0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a></p>
     <p id="footNote">HACHI Fund — the loyal fund. Mint with your agent. BNB Smart Chain (chainId 56).</p>
   </footer>
 
@@ -143,7 +143,7 @@
 // HACHIFUND — single-page fund site. No wallet connect anywhere: the page
 // only shows information, a live shares-sold counter, and a copy-paste
 // prompt for the visitor's agent.
-var CONTRACT = "0x0000000000000000000000000000000000000000"; // PREVIEW placeholder — fill at deploy
+var CONTRACT = "0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c"; // LIVE — deployed 2026-11-23, tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b
 var TREASURY = "0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa";
 var MAX_SHARES = 1000;
 var PRICE_PER_SHARE_BNB = 0.0015;
@@ -152,7 +152,7 @@ var RPCS = ["https://bsc-dataseed1.defibit.io", "https://bsc-rpc.publicnode.com"
 
 var I18N = {
   en: {
-    banner: "PREVIEW — the HACHI Fund contract is not deployed yet. The numbers below are the planned specification, not on-chain values.",
+    banner: "LIVE on BNB Chain — the fund is open for minting. The numbers below are read on-chain.",
     heroBadge: "Mint with your agent",
     heroDesc: "HACHI Fund is a community fund. When it is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi. Each mint costs 0.0015 BNB and gives you 1,000,000 HACHI. 1,000 shares in total. Copy one prompt, give it to your agent, and it mints your shares.",
     statusTitle: "Fund status · live",
@@ -167,7 +167,7 @@ var I18N = {
     t5: "When the fund is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi.",
     t6: "There is no guaranteed price, and HACHI can be traded only if a market exists.",
     promptTitle: "Copy the prompt",
-    promptNote: "PREVIEW — the contract is not deployed yet, so the prompt below uses a placeholder address (0x0000…0000). It will be updated with the real contract address at deploy. Give this prompt to your agent — your agent makes the contract call, and you approve each step.",
+    promptNote: "The prompt below uses the live contract address. Give this prompt to your agent — your agent makes the contract call, and you approve each step.",
     copy1: "Copy prompt: 1 mint",
     copy10: "Copy prompt: 10 mints",
     copied: "Copied!",
@@ -184,15 +184,15 @@ var I18N = {
     a5: "Never share your seed phrase or private key with anyone. The prompt does not need them.",
     footX: "(account being created)",
     footTreasury: "Treasury wallet:",
-    footContract: "Fund contract: not deployed yet (preview).",
+    footContract: "Fund contract: <a href='https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c' target='_blank' rel='noopener'>0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a>",
     footNote: "HACHI Fund — the loyal fund. Mint with your agent. BNB Smart Chain (chainId 56).",
     statusLoading: "Loading live count from BNB Chain…",
     statusLive: "Live on BNB Chain — updated just now.",
-    statusPreview: "Preview — the contract is not deployed yet, so this is the planned 0 / 1,000.",
+    statusPreview: "Live on BNB Chain — the fund is open for minting.",
     statusStale: "Live count could not be loaded — showing the last verified value."
   },
   ja: {
-    banner: "プレビュー — HACHI Fundのコントラクトはまだデプロイされていません。以下の数字は予定仕様であり、オンチェーンの値ではありません。",
+    banner: "ライブ — HACHI FundのコントラクトはBNBチェーンにデプロイされました。以下の数字はオンチェーンから取得しています。",
     heroBadge: "エージェントでミント",
     heroDesc: "HACHI Fundはコミュニティファンドです。ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。1シェアのミントは0.0015 BNBで、1,000,000 HACHIがもらえます。総シェア数は1,000。プロンプトを1つコピーしてエージェントに渡すだけで、シェアをミントできます。",
     statusTitle: "ファンドの状況 · ライブ",
@@ -207,7 +207,7 @@ var I18N = {
     t5: "ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。",
     t6: "価格の保証はなく、HACHIは市場が存在する場合にのみ取引できます。",
     promptTitle: "プロンプトをコピー",
-    promptNote: "プレビュー — コントラクトはまだデプロイされていないため、以下のプロンプトはプレースホルダーのアドレス（0x0000…0000）を使っています。デプロイ時に実際のアドレスに更新されます。このプロンプトをエージェントに渡してください。コントラクトの呼び出しはエージェントが行い、あなたが各ステップを承認します。",
+    promptNote: "以下のプロンプトはライブのコントラクトアドレスを使っています。このプロンプトをエージェントに渡してください。コントラクトの呼び出しはエージェントが行い、あなたが各ステップを承認します。",
     copy1: "プロンプトをコピー：1ミント",
     copy10: "プロンプトをコピー：10ミント",
     copied: "コピーしました！",
@@ -224,11 +224,11 @@ var I18N = {
     a5: "シードフレーズや秘密鍵は誰にも共有しないでください。このプロンプトでは必要ありません。",
     footX: "（アカウント作成中）",
     footTreasury: "トレジャリーウォレット：",
-    footContract: "ファンドコントラクト：未デプロイ（プレビュー）。",
+    footContract: "ファンドコントラクト：<a href='https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c' target='_blank' rel='noopener'>0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a>",
     footNote: "HACHI Fund — 忠実なファンド。エージェントでミント。BNB Smart Chain（chainId 56）。",
     statusLoading: "BNBチェーンからライブ数を取得中…",
     statusLive: "BNBチェーンでライブ — たった今更新。",
-    statusPreview: "プレビュー — コントラクトはまだデプロイされていないため、予定の0 / 1,000を表示しています。",
+    statusPreview: "ライブ — ファンドはミント受付中です。",
     statusStale: "ライブ数を取得できませんでした — 最後に確認された値を表示しています。"
   }
 };
@@ -276,8 +276,6 @@ function promptText(shares) {
   if (shares === 10) value = "0.015";
   var tokens = (shares * 1000000).toLocaleString("en-US");
   var lines = [
-    "[PREVIEW — contract not deployed yet; address below is a placeholder]",
-    "",
     "Mint HACHI Fund shares on BNB Smart Chain (chainId 56) by calling mint(uint256 shares) on this contract: " + CONTRACT,
     "",
     "Shares: " + shares,

@@ -1,6 +1,6 @@
 # HACHIFUND
 
-**Status: PREVIEW — contracts NOT deployed, page NOT live.** Local build only.
+**Status: LIVE — contract deployed 2026-11-23, page live at https://hachifund.vercel.app/.**
 
 HACHI Fund is a community fund on BNB Smart Chain, Hachiko-themed.
 Mint shares with your agent: **0.0015 BNB per share → 1,000,000 $HACHI**.
@@ -8,7 +8,7 @@ Mint shares with your agent: **0.0015 BNB per share → 1,000,000 $HACHI**.
 buys tokens with loyal communities — tokens that stay, like Hachi.
 
 - **Token:** Hachi Fund (HACHI), 18 decimals, BNB Smart Chain (chainId 56)
-- **Fund contract:** `0x0000000000000000000000000000000000000000` (PREVIEW placeholder)
+- **Fund contract:** `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c` (deployed, tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b, block 135266415)
 - **Predicted address (CREATE2, salt 0):** `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`
 - **Treasury / owner:** `0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa`
 - **X:** @HachiFund (https://x.com/HachiFund — account being created)

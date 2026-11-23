@@ -5,7 +5,7 @@ Mint shares with your agent: 0.0015 BNB per share gives 1,000,000 HACHI.
 1,000 shares in total; when full (1.5 BNB), the fund buys tokens with
 loyal communities — tokens that stay, like Hachi.
 
-- Fund contract: 0x0000000000000000000000000000000000000000 (PREVIEW — not deployed yet)
+- Fund contract: 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c (LIVE — deployed 2026-11-23)
 - Predicted address (CREATE2, salt 0): 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c
 - Treasury / owner: 0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa
 - Token: Hachi Fund (HACHI), 18 decimals, BNB Smart Chain (chainId 56)

@@ -1,8 +1,9 @@
 # HACHIFUND — Agent Skill
 
-> **PREVIEW — contract NOT deployed yet.** The contract address below is
-> the zero-address placeholder. Do NOT attempt a real mint until the
-> address is filled in after deploy.
+> **LIVE — contract deployed 2026-11-23.** Fund contract
+> `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`, tx
+> `0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b`
+> (block 135266415). Minting is open.
 
 HACHI Fund is a community fund on BNB Smart Chain (chainId 56). 1,000
 shares total. Each share costs 0.0015 BNB and gives 1,000,000 $HACHI.
@@ -10,12 +11,12 @@ When the fund is full (1.5 BNB), it buys tokens with loyal communities —
 tokens that stay, like Hachi. There is no guaranteed price and no
 guaranteed market.
 
-## Contracts (PREVIEW)
+## Contracts (LIVE)
 
 | Item | Value |
 |------|-------|
-| Fund contract (ERC20 + fund) | `0x0000000000000000000000000000000000000000` (PLACEHOLDER — fill at deploy) |
-| Predicted address (CREATE2, salt 0) | `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c` |
+| Fund contract (ERC20 + fund) | `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c` |
+| Deployed address (CREATE2, salt 0) | `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c` |
 | Treasury / owner | `0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa` |
 | Token | Hachi Fund (HACHI), 18 decimals |
 | Chain | BNB Smart Chain (chainId 56) |
@@ -23,7 +24,7 @@ guaranteed market.
 ## How to mint (give this to your agent)
 
 ```
-Mint HACHI Fund shares on BNB Smart Chain (chainId 56) by calling mint(uint256 shares) on this contract: 0x0000000000000000000000000000000000000000
+Mint HACHI Fund shares on BNB Smart Chain (chainId 56) by calling mint(uint256 shares) on this contract: 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c
 
 Shares: 1
 Price per share: 0.0015 BNB
@@ -67,7 +68,7 @@ shares are left.
 
 ## Links
 
-- Page: (not live yet — Vercel project not created)
+- Page: https://hachifund.vercel.app/
 - X: @HachiFund — https://x.com/HachiFund (account being created)
 - Treasury on BscScan: https://bscscan.com/address/0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa
-- Repo: (not pushed yet)
+- Repo: https://github.com/akungamesatu6-crypto/Hachiko
