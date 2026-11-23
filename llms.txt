@@ -1,0 +1,17 @@
+# HACHIFUND
+
+HACHI Fund — the loyal fund. A community fund on BNB Smart Chain.
+Mint shares with your agent: 0.0015 BNB per share gives 1,000,000 HACHI.
+1,000 shares in total; when full (1.5 BNB), the fund buys tokens with
+loyal communities — tokens that stay, like Hachi.
+
+- Fund contract: 0x0000000000000000000000000000000000000000 (PREVIEW — not deployed yet)
+- Predicted address (CREATE2, salt 0): 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c
+- Treasury / owner: 0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa
+- Token: Hachi Fund (HACHI), 18 decimals, BNB Smart Chain (chainId 56)
+- Mint: mint(uint256 shares) payable, exact 0.0015 BNB per share
+- Live count: sharesSold() (0–1,000)
+- X: @HachiFund (https://x.com/HachiFund, account being created)
+- Language: EN + 日本語 (EN primary)
+- No guaranteed price or trading. No wallet connect on the page — mint
+  via your agent with the copy-paste prompt (see SKILL.md).
