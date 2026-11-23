@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HACHIFUND · Mint with your agent</title>
-<meta name="description" content="HACHI Fund is a community fund on BNB Chain. Mint shares with your agent: 0.0015 BNB per share gives 1,000,000 HACHI. 1,000 shares in total.">
+<meta name="description" content="HACHI Fund is a community fund on BNB Chain. Your first share is free; paid shares cost 0.0015 BNB each and give 1,000,000 HACHI. 2,222 shares in total: 1,222 free + 1,000 paid.">
 <style>
   :root{
     --bg:#17100a; --surface:#241812; --surface2:#2e1f14; --line:#3d2c1c;
@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<div class="banner" id="banner">LIVE on BNB Chain — the fund is open for minting. The numbers below are read on-chain.</div>
+<div class="banner" id="banner">PREVIEW — HACHIFUND v2 is not deployed yet. The numbers below are the planned specification, not on-chain values.</div>
 <div class="wrap">
 
   <header>
@@ -78,17 +78,19 @@
     <img src="assets/hero.jpg" alt="Hachi the loyal Akita waiting at a Japanese train station at dusk">
     <span class="badge" id="heroBadge">Mint with your agent</span>
     <h1>HACHIFUND</h1>
-    <p class="lede" id="heroDesc">HACHI Fund is a community fund. When it is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi. Each mint costs 0.0015 BNB and gives you 1,000,000 HACHI. 1,000 shares in total. Copy one prompt, give it to your agent, and it mints your shares.</p>
+    <p class="lede" id="heroDesc">HACHI Fund is a community fund. When it is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi. Your first share is FREE (1 per wallet). Paid shares cost 0.0015 BNB each and give you 1,000,000 HACHI. 2,222 shares in total: 1,222 free + 1,000 paid. Copy one prompt, give it to your agent, and it mints your shares.</p>
   </div>
 
   <section id="status">
     <h2 id="statusTitle">Fund status · live</h2>
     <div class="card">
-      <div class="bignum"><span id="soldCount">0</span> <small>/ 1,000 <span id="soldLabel">shares sold</span></small></div>
+      <div class="bignum"><span id="soldCount">0</span> <small>/ 2,222 <span id="soldLabel">shares sold</span></small></div>
       <div class="bar"><i id="progressFill"></i></div>
       <div class="stats">
+        <div><span id="freeLabel">Free claimed</span><b id="freeCount">0 / 1,222</b></div>
+        <div><span id="paidLabel">Paid sold</span><b id="paidCount">0 / 1,000</b></div>
         <div><span id="collectedLabel">BNB collected</span><b id="bnbCount">0 BNB</b></div>
-        <div><span id="leftLabel">Shares left</span><b id="leftCount">1,000</b></div>
+        <div><span id="leftLabel">Shares left</span><b id="leftCount">2,222</b></div>
       </div>
       <p class="note" id="statusNote">Loading live count from BNB Chain…</p>
     </div>
@@ -98,12 +100,13 @@
     <h2 id="termsTitle">The HACHI terms</h2>
     <div class="card">
       <ol class="terms">
-        <li id="t1">You (or your agent) call <code>mint(uint256 shares)</code> on the contract.</li>
-        <li id="t2">You send 0.0015 BNB per share. Ten shares cost 0.015 BNB.</li>
-        <li id="t3">You receive 1,000,000 HACHI per share, so 10,000,000 HACHI for 10 shares.</li>
-        <li id="t4">Your payment goes to the treasury wallet: <code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code></li>
-        <li id="t5">When the fund is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi.</li>
-        <li id="t6">There is no guaranteed price, and HACHI can be traded only if a market exists.</li>
+        <li id="t1">Your first share is FREE — your agent calls <code>mintFree()</code> on the free contract. One free share per wallet.</li>
+        <li id="t2">Paid shares: your agent calls <code>mint(uint256 shares)</code> on the paid contract.</li>
+        <li id="t3">You send 0.0015 BNB per paid share. Ten paid shares cost 0.015 BNB.</li>
+        <li id="t4">You receive 1,000,000 HACHI per share — free or paid — so 10,000,000 HACHI for 10 paid shares.</li>
+        <li id="t5">Your payment goes to the treasury wallet: <code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code></li>
+        <li id="t6">When the fund is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi.</li>
+        <li id="t7">There is no guaranteed price, and HACHI can be traded only if a market exists.</li>
       </ol>
     </div>
   </section>
@@ -111,10 +114,11 @@
   <section id="prompt">
     <h2 id="promptTitle">Copy the prompt</h2>
     <div class="card">
-      <p class="note" style="margin-top:0" id="promptNote">The prompt below uses the live contract address. Give this prompt to your agent — your agent makes the contract call, and you approve each step.</p>
+      <p class="note" style="margin-top:0" id="promptNote">PREVIEW — the v2 contracts are not deployed yet, so the prompts below use placeholder addresses (0x0000…0000). They will be updated with the real contract addresses at deploy. Give a prompt to your agent — your agent makes the contract call, and you approve each step.</p>
       <textarea id="promptBox" readonly></textarea>
       <div class="btnrow">
-        <button class="cta" id="copy1" onclick="copyPrompt(1)">Copy prompt: 1 mint</button>
+        <button class="cta" id="copyFree" onclick="copyFree()">Copy prompt: 1 free mint</button>
+        <button class="ghost" id="copy1" onclick="copyPrompt(1)">Copy prompt: 1 mint</button>
         <button class="ghost" id="copy10" onclick="copyPrompt(10)">Copy prompt: 10 mints</button>
         <span class="copied" id="copiedMsg">Copied!</span>
       </div>
@@ -128,46 +132,59 @@
     <details><summary id="q3">Is there a guaranteed price or trading?</summary><p id="a3">No. The payment goes to the treasury wallet, not into a liquidity pool, so a market price or trading is not guaranteed.</p></details>
     <details><summary id="q4">Who runs the fund?</summary><p id="a4">HACHI Fund is an independent community project. The treasury wallet is 0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa — every mint's payment goes there, and the fund's buys will be made from that wallet.</p></details>
     <details><summary id="q5">Will anyone ask for my seed phrase?</summary><p id="a5">Never share your seed phrase or private key with anyone. The prompt does not need them.</p></details>
+    <details><summary id="q6">How do I get the free share?</summary><p id="a6">Give the "1 free mint" prompt to your agent. It calls mintFree() on the free contract. One free share per wallet, and it gives you 1,000,000 HACHI — no BNB needed, only network gas.</p></details>
+    <details><summary id="q7">Why are there two contracts?</summary><p id="a7">HACHIFUND v2 splits the fund into a free pool (1,222 shares) and a paid pool (1,000 shares) so the two stay fully independent. Both mint the same HACHI token, and this page shows both pools together.</p></details>
   </section>
 
   <footer>
     <p><a href="https://x.com/HachiFund" target="_blank" rel="noopener">X · @HachiFund</a> <span id="footX">(account being created)</span></p>
     <p><span id="footTreasury">Treasury wallet:</span> <a class="addr" href="https://bscscan.com/address/0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa" target="_blank" rel="noopener">0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</a></p>
-    <p id="footContract">Fund contract: <a href="https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c" target="_blank" rel="noopener">0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a></p>
+    <p id="footContract">Fund contracts (v2): token + free + paid — not deployed yet (preview).</p>
     <p id="footNote">HACHI Fund — the loyal fund. Mint with your agent. BNB Smart Chain (chainId 56).</p>
   </footer>
 
 </div>
 <script>
 "use strict";
-// HACHIFUND — single-page fund site. No wallet connect anywhere: the page
-// only shows information, a live shares-sold counter, and a copy-paste
-// prompt for the visitor's agent.
-var CONTRACT = "0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c"; // LIVE — deployed 2026-11-23, tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b
+// HACHIFUND v2 — single-page fund site. No wallet connect anywhere: the page
+// only shows information, live free/paid counters, and copy-paste prompts
+// for the visitor's agent. PREVIEW: the v2 contracts are not deployed yet,
+// so TOKEN / FREE_CONTRACT / PAID_CONTRACT are zero-address placeholders.
+var TOKEN = "0x0000000000000000000000000000000000000000"; // PREVIEW placeholder — fill at deploy
+var FREE_CONTRACT = "0x0000000000000000000000000000000000000000"; // PREVIEW placeholder — fill at deploy
+var PAID_CONTRACT = "0x0000000000000000000000000000000000000000"; // PREVIEW placeholder — fill at deploy
 var TREASURY = "0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa";
-var MAX_SHARES = 1000;
+var MAX_SHARES = 2222;
+var MAX_FREE = 1222;
+var MAX_PAID = 1000;
 var PRICE_PER_SHARE_BNB = 0.0015;
-var SEL_SHARES_SOLD = "0x192fc516"; // sharesSold()
+var SEL_FREE_SOLD = "0xa37d6e0f"; // freeSold()
+var SEL_PAID_SOLD = "0x10b985d4"; // paidSold()
+var ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 var RPCS = ["https://bsc-dataseed1.defibit.io", "https://bsc-rpc.publicnode.com", "https://bsc-dataseed3.bnbchain.org", "https://bsc-dataseed4.bnbchain.org", "https://1rpc.io/bnb"];
 
 var I18N = {
   en: {
-    banner: "LIVE on BNB Chain — the fund is open for minting. The numbers below are read on-chain.",
+    banner: "PREVIEW — HACHIFUND v2 is not deployed yet. The numbers below are the planned specification, not on-chain values.",
     heroBadge: "Mint with your agent",
-    heroDesc: "HACHI Fund is a community fund. When it is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi. Each mint costs 0.0015 BNB and gives you 1,000,000 HACHI. 1,000 shares in total. Copy one prompt, give it to your agent, and it mints your shares.",
+    heroDesc: "HACHI Fund is a community fund. When it is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi. Your first share is FREE (1 per wallet). Paid shares cost 0.0015 BNB each and give you 1,000,000 HACHI. 2,222 shares in total: 1,222 free + 1,000 paid. Copy one prompt, give it to your agent, and it mints your shares.",
     statusTitle: "Fund status · live",
     soldLabel: "shares sold",
+    freeLabel: "Free claimed",
+    paidLabel: "Paid sold",
     collectedLabel: "BNB collected",
     leftLabel: "Shares left",
     termsTitle: "The HACHI terms",
-    t1: "You (or your agent) call <code>mint(uint256 shares)</code> on the contract.",
-    t2: "You send 0.0015 BNB per share. Ten shares cost 0.015 BNB.",
-    t3: "You receive 1,000,000 HACHI per share, so 10,000,000 HACHI for 10 shares.",
-    t4: "Your payment goes to the treasury wallet: <code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code>",
-    t5: "When the fund is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi.",
-    t6: "There is no guaranteed price, and HACHI can be traded only if a market exists.",
+    t1: "Your first share is FREE — your agent calls <code>mintFree()</code> on the free contract. One free share per wallet.",
+    t2: "Paid shares: your agent calls <code>mint(uint256 shares)</code> on the paid contract.",
+    t3: "You send 0.0015 BNB per paid share. Ten paid shares cost 0.015 BNB.",
+    t4: "You receive 1,000,000 HACHI per share — free or paid — so 10,000,000 HACHI for 10 paid shares.",
+    t5: "Your payment goes to the treasury wallet: <code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code>",
+    t6: "When the fund is full, the fund will be used to buy tokens with loyal communities — tokens that stay, like Hachi.",
+    t7: "There is no guaranteed price, and HACHI can be traded only if a market exists.",
     promptTitle: "Copy the prompt",
-    promptNote: "The prompt below uses the live contract address. Give this prompt to your agent — your agent makes the contract call, and you approve each step.",
+    promptNote: "PREVIEW — the v2 contracts are not deployed yet, so the prompts below use placeholder addresses (0x0000…0000). They will be updated with the real contract addresses at deploy. Give a prompt to your agent — your agent makes the contract call, and you approve each step.",
+    copyFree: "Copy prompt: 1 free mint",
     copy1: "Copy prompt: 1 mint",
     copy10: "Copy prompt: 10 mints",
     copied: "Copied!",
@@ -182,32 +199,40 @@ var I18N = {
     a4: "HACHI Fund is an independent community project. The treasury wallet is 0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa — every mint's payment goes there, and the fund's buys will be made from that wallet.",
     q5: "Will anyone ask for my seed phrase?",
     a5: "Never share your seed phrase or private key with anyone. The prompt does not need them.",
+    q6: "How do I get the free share?",
+    a6: "Give the '1 free mint' prompt to your agent. It calls mintFree() on the free contract. One free share per wallet, and it gives you 1,000,000 HACHI — no BNB needed, only network gas.",
+    q7: "Why are there two contracts?",
+    a7: "HACHIFUND v2 splits the fund into a free pool (1,222 shares) and a paid pool (1,000 shares) so the two stay fully independent. Both mint the same HACHI token, and this page shows both pools together.",
     footX: "(account being created)",
     footTreasury: "Treasury wallet:",
-    footContract: "Fund contract: <a href='https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c' target='_blank' rel='noopener'>0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a>",
+    footContract: "Fund contracts (v2): token + free + paid — not deployed yet (preview).",
     footNote: "HACHI Fund — the loyal fund. Mint with your agent. BNB Smart Chain (chainId 56).",
     statusLoading: "Loading live count from BNB Chain…",
     statusLive: "Live on BNB Chain — updated just now.",
-    statusPreview: "Live on BNB Chain — the fund is open for minting.",
+    statusPreview: "Preview — the v2 contracts are not deployed yet, so this is the planned 0 / 2,222.",
     statusStale: "Live count could not be loaded — showing the last verified value."
   },
   ja: {
-    banner: "ライブ — HACHI FundのコントラクトはBNBチェーンにデプロイされました。以下の数字はオンチェーンから取得しています。",
+    banner: "プレビュー — HACHIFUND v2のコントラクトはまだデプロイされていません。以下の数字は予定仕様であり、オンチェーンの値ではありません。",
     heroBadge: "エージェントでミント",
-    heroDesc: "HACHI Fundはコミュニティファンドです。ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。1シェアのミントは0.0015 BNBで、1,000,000 HACHIがもらえます。総シェア数は1,000。プロンプトを1つコピーしてエージェントに渡すだけで、シェアをミントできます。",
+    heroDesc: "HACHI Fundはコミュニティファンドです。ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。最初の1シェアは無料です（1ウォレットにつき1シェア）。有料シェアは1シェアあたり0.0015 BNBで、1,000,000 HACHIがもらえます。総シェア数は2,222（無料1,222＋有料1,000）。プロンプトを1つコピーしてエージェントに渡すだけで、シェアをミントできます。",
     statusTitle: "ファンドの状況 · ライブ",
     soldLabel: "シェア売却済み",
+    freeLabel: "無料で請求済み",
+    paidLabel: "有料で売却済み",
     collectedLabel: "集まったBNB",
     leftLabel: "残りシェア",
     termsTitle: "HACHIの条件",
-    t1: "あなた（またはエージェント）がコントラクトの <code>mint(uint256 shares)</code> を呼びます。",
-    t2: "1シェアあたり0.0015 BNBを送ります。10シェアで0.015 BNBです。",
-    t3: "1シェアあたり1,000,000 HACHIを受け取ります。10シェアで10,000,000 HACHIです。",
-    t4: "支払いはトレジャリーウォレットに送られます：<code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code>",
-    t5: "ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。",
-    t6: "価格の保証はなく、HACHIは市場が存在する場合にのみ取引できます。",
+    t1: "最初の1シェアは無料です — エージェントが無料コントラクトの <code>mintFree()</code> を呼びます。1ウォレットにつき1シェアまで。",
+    t2: "有料シェア：エージェントが有料コントラクトの <code>mint(uint256 shares)</code> を呼びます。",
+    t3: "有料シェア1つあたり0.0015 BNBを送ります。10シェアで0.015 BNBです。",
+    t4: "無料・有料を問わず、1シェアあたり1,000,000 HACHIを受け取ります。10シェアで10,000,000 HACHIです。",
+    t5: "支払いはトレジャリーウォレットに送られます：<code>0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa</code>",
+    t6: "ファンドが満杯になったら、忠実なコミュニティを持つトークン——ハチのように留まるトークンを買うために使われます。",
+    t7: "価格の保証はなく、HACHIは市場が存在する場合にのみ取引できます。",
     promptTitle: "プロンプトをコピー",
-    promptNote: "以下のプロンプトはライブのコントラクトアドレスを使っています。このプロンプトをエージェントに渡してください。コントラクトの呼び出しはエージェントが行い、あなたが各ステップを承認します。",
+    promptNote: "プレビュー — v2のコントラクトはまだデプロイされていないため、以下のプロンプトはプレースホルダーのアドレス（0x0000…0000）を使っています。デプロイ時に実際のアドレスに更新されます。プロンプトをエージェントに渡してください。コントラクトの呼び出しはエージェントが行い、あなたが各ステップを承認します。",
+    copyFree: "プロンプトをコピー：1無料ミント",
     copy1: "プロンプトをコピー：1ミント",
     copy10: "プロンプトをコピー：10ミント",
     copied: "コピーしました！",
@@ -222,19 +247,24 @@ var I18N = {
     a4: "HACHI Fundは独立したコミュニティプロジェクトです。トレジャリーウォレットは0x7379CA652f68fd1daAc11b7b87bb6B222fD129faで、すべてのミント代金はそこに送られ、ファンドの購入もそのウォレットから行われます。",
     q5: "シードフレーズを聞かれることはありますか？",
     a5: "シードフレーズや秘密鍵は誰にも共有しないでください。このプロンプトでは必要ありません。",
+    q6: "無料シェアはどうやってもらえますか？",
+    a6: "「1無料ミント」のプロンプトをエージェントに渡してください。エージェントが無料コントラクトの mintFree() を呼びます。1ウォレットにつき1シェアまでで、1,000,000 HACHIがもらえます。BNBは不要で、ネットワークガスのみかかります。",
+    q7: "なぜコントラクトが2つあるのですか？",
+    a7: "HACHIFUND v2では、無料プール（1,222シェア）と有料プール（1,000シェア）を分けることで、両方を完全に独立させています。どちらも同じHACHIトークンをミントし、このページで両方をまとめて表示します。",
     footX: "（アカウント作成中）",
     footTreasury: "トレジャリーウォレット：",
-    footContract: "ファンドコントラクト：<a href='https://bscscan.com/address/0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c' target='_blank' rel='noopener'>0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c</a>",
+    footContract: "ファンドコントラクト（v2）：トークン＋無料＋有料 — 未デプロイ（プレビュー）。",
     footNote: "HACHI Fund — 忠実なファンド。エージェントでミント。BNB Smart Chain（chainId 56）。",
     statusLoading: "BNBチェーンからライブ数を取得中…",
     statusLive: "BNBチェーンでライブ — たった今更新。",
-    statusPreview: "ライブ — ファンドはミント受付中です。",
+    statusPreview: "プレビュー — v2のコントラクトはまだデプロイされていないため、予定の0 / 2,222を表示しています。",
     statusStale: "ライブ数を取得できませんでした — 最後に確認された値を表示しています。"
   }
 };
 
 var lang = "en";
-var lastSold = null;
+var lastFree = null;
+var lastPaid = null;
 
 function setText(id, html) {
   var el = document.getElementById(id);
@@ -252,17 +282,20 @@ function setLang(l) {
   setText("heroDesc", d.heroDesc);
   setText("statusTitle", d.statusTitle);
   setText("soldLabel", d.soldLabel);
+  setText("freeLabel", d.freeLabel);
+  setText("paidLabel", d.paidLabel);
   setText("collectedLabel", d.collectedLabel);
   setText("leftLabel", d.leftLabel);
   setText("termsTitle", d.termsTitle);
-  for (var i = 1; i <= 6; i++) setText("t" + i, d["t" + i]);
+  for (var i = 1; i <= 7; i++) setText("t" + i, d["t" + i]);
   setText("promptTitle", d.promptTitle);
   setText("promptNote", d.promptNote);
+  setText("copyFree", d.copyFree);
   setText("copy1", d.copy1);
   setText("copy10", d.copy10);
   setText("copiedMsg", d.copied);
   setText("faqTitle", d.faqTitle);
-  for (var j = 1; j <= 5; j++) { setText("q" + j, d["q" + j]); setText("a" + j, d["a" + j]); }
+  for (var j = 1; j <= 7; j++) { setText("q" + j, d["q" + j]); setText("a" + j, d["a" + j]); }
   setText("footX", d.footX);
   setText("footTreasury", d.footTreasury);
   setText("footContract", d.footContract);
@@ -270,13 +303,36 @@ function setLang(l) {
   renderStatusNote();
 }
 
-function promptText(shares) {
+function promptTextFree() {
+  var lines = [
+    "[PREVIEW — v2 contracts not deployed yet; addresses below are placeholders]",
+    "",
+    "Claim my FREE HACHI Fund share on BNB Smart Chain (chainId 56) by calling mintFree() on this contract: " + FREE_CONTRACT,
+    "",
+    "Shares: 1 (free, 1 per wallet)",
+    "Transaction value: 0 BNB (only network gas)",
+    "Result: 1,000,000 HACHI sent to my wallet.",
+    "",
+    "Steps:",
+    "1. Read freeSold() and hasClaimedFree(my address) and confirm free shares are left and I have not claimed yet.",
+    "2. Preview the call: contract address and estimated gas.",
+    "3. Wait for me to reply \"confirm\" before sending anything.",
+    "4. After the transaction, show the tx hash and my new HACHI balance.",
+    "",
+    "Never ask for my seed phrase or private key. Use only the contract address above."
+  ];
+  return lines.join("\n");
+}
+
+function promptTextPaid(shares) {
   var value = (shares * PRICE_PER_SHARE_BNB).toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
   if (shares === 1) value = "0.0015";
   if (shares === 10) value = "0.015";
   var tokens = (shares * 1000000).toLocaleString("en-US");
   var lines = [
-    "Mint HACHI Fund shares on BNB Smart Chain (chainId 56) by calling mint(uint256 shares) on this contract: " + CONTRACT,
+    "[PREVIEW — v2 contracts not deployed yet; addresses below are placeholders]",
+    "",
+    "Mint HACHI Fund shares on BNB Smart Chain (chainId 56) by calling mint(uint256 shares) on this contract: " + PAID_CONTRACT,
     "",
     "Shares: " + shares,
     "Price per share: 0.0015 BNB",
@@ -284,7 +340,7 @@ function promptText(shares) {
     "Result: " + tokens + " HACHI sent to my wallet.",
     "",
     "Steps:",
-    "1. Read sharesSold() and confirm at least " + shares + " shares are left out of 1000.",
+    "1. Read paidSold() and confirm at least " + shares + " paid shares are left out of 1000.",
     "2. Preview the call: contract address, shares, BNB value and estimated gas.",
     "3. Wait for me to reply \"confirm\" before sending anything.",
     "4. After the transaction, show the tx hash and my new HACHI balance.",
@@ -294,15 +350,23 @@ function promptText(shares) {
   return lines.join("\n");
 }
 
+var currentKind = "free";
 var currentShares = 1;
-function showPrompt(shares) {
-  currentShares = shares;
-  document.getElementById("promptBox").value = promptText(shares);
+function showFreePrompt() {
+  currentKind = "free";
+  currentShares = 1;
+  document.getElementById("promptBox").value = promptTextFree();
   document.getElementById("copiedMsg").style.display = "none";
 }
 
-function copyPrompt(shares) {
-  showPrompt(shares);
+function showPrompt(shares) {
+  currentKind = "paid";
+  currentShares = shares;
+  document.getElementById("promptBox").value = promptTextPaid(shares);
+  document.getElementById("copiedMsg").style.display = "none";
+}
+
+function copyBox() {
   var box = document.getElementById("promptBox");
   var done = function () { document.getElementById("copiedMsg").style.display = "inline"; };
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -314,69 +378,99 @@ function copyPrompt(shares) {
   }
 }
 
+function copyFree() {
+  showFreePrompt();
+  copyBox();
+}
+
+function copyPrompt(shares) {
+  showPrompt(shares);
+  copyBox();
+}
+
 function fmt(n) { return n.toLocaleString("en-US"); }
 
-function renderStatus(sold, live) {
+function renderStatus(freeSold, paidSold, live) {
+  var sold = freeSold + paidSold;
   var left = MAX_SHARES - sold;
-  var bnb = sold * PRICE_PER_SHARE_BNB;
+  var bnb = paidSold * PRICE_PER_SHARE_BNB;
   document.getElementById("soldCount").textContent = fmt(sold);
+  document.getElementById("freeCount").textContent = fmt(freeSold) + " / " + fmt(MAX_FREE);
+  document.getElementById("paidCount").textContent = fmt(paidSold) + " / " + fmt(MAX_PAID);
   document.getElementById("leftCount").textContent = fmt(left);
   document.getElementById("bnbCount").textContent = (bnb % 1 === 0 ? bnb.toFixed(0) : bnb.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")) + " BNB";
   document.getElementById("progressFill").style.width = (sold / MAX_SHARES * 100) + "%";
   renderStatusNote(live);
 }
 
+function isPreview() {
+  return TOKEN === ZERO_ADDR && FREE_CONTRACT === ZERO_ADDR && PAID_CONTRACT === ZERO_ADDR;
+}
+
 function renderStatusNote(live) {
   var d = I18N[lang];
   var el = document.getElementById("statusNote");
   if (!el) return;
-  if (CONTRACT === "0x0000000000000000000000000000000000000000") {
+  if (isPreview()) {
     el.textContent = d.statusPreview;
   } else if (live === true) {
     el.textContent = d.statusLive;
-  } else if (live === false && lastSold !== null) {
+  } else if (live === false && lastFree !== null && lastPaid !== null) {
     el.textContent = d.statusStale;
   } else {
     el.textContent = d.statusLoading;
   }
 }
 
-function ethCall(url, data) {
+function ethCall(url, contract, data) {
   return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", method: "eth_call", params: [{ to: CONTRACT, data: data }, "latest"], id: 1 })
+    body: JSON.stringify({ jsonrpc: "2.0", method: "eth_call", params: [{ to: contract, data: data }, "latest"], id: 1 })
   }).then(function (r) { return r.json(); });
 }
 
 function refreshStatus() {
-  if (CONTRACT === "0x0000000000000000000000000000000000000000") {
-    renderStatus(0, null);
+  if (isPreview()) {
+    renderStatus(0, 0, null);
     return;
   }
-  var chain = Promise.resolve(null);
+  var chainFree = Promise.resolve(null);
   RPCS.forEach(function (url) {
-    chain = chain.then(function (done) {
+    chainFree = chainFree.then(function (done) {
       if (done) return done;
-      return ethCall(url, SEL_SHARES_SOLD).then(function (res) {
+      return ethCall(url, FREE_CONTRACT, SEL_FREE_SOLD).then(function (res) {
         if (res && res.result) return parseInt(res.result, 16);
         return null;
       }).catch(function () { return null; });
     });
   });
-  chain.then(function (sold) {
-    if (sold === null || isNaN(sold)) {
-      if (lastSold !== null) renderStatus(lastSold, false);
+  var chainPaid = Promise.resolve(null);
+  RPCS.forEach(function (url) {
+    chainPaid = chainPaid.then(function (done) {
+      if (done) return done;
+      return ethCall(url, PAID_CONTRACT, SEL_PAID_SOLD).then(function (res) {
+        if (res && res.result) return parseInt(res.result, 16);
+        return null;
+      }).catch(function () { return null; });
+    });
+  });
+  Promise.all([chainFree, chainPaid]).then(function (vals) {
+    var freeSold = vals[0];
+    var paidSold = vals[1];
+    if (freeSold === null || isNaN(freeSold) || paidSold === null || isNaN(paidSold)) {
+      if (lastFree !== null && lastPaid !== null) renderStatus(lastFree, lastPaid, false);
       else renderStatusNote(null);
       return;
     }
-    lastSold = sold;
-    renderStatus(sold, true);
+    lastFree = freeSold;
+    lastPaid = paidSold;
+    renderStatus(freeSold, paidSold, true);
   });
 }
 
-showPrompt(1);
-renderStatus(0, null);
+showFreePrompt();
+renderStatus(0, 0, null);
 refreshStatus();
 setInterval(refreshStatus, 60000);
 </script>

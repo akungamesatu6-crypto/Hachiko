@@ -1,16 +1,27 @@
-# HACHIFUND
+# HACHIFUND v2
 
 HACHI Fund — the loyal fund. A community fund on BNB Smart Chain.
-Mint shares with your agent: 0.0015 BNB per share gives 1,000,000 HACHI.
-1,000 shares in total; when full (1.5 BNB), the fund buys tokens with
-loyal communities — tokens that stay, like Hachi.
+Your first share is FREE (1 per wallet); paid shares cost 0.0015 BNB
+each and give 1,000,000 HACHI. 2,222 shares in total: 1,222 free +
+1,000 paid. When full (1.5 BNB from the paid pool), the fund buys
+tokens with loyal communities — tokens that stay, like Hachi.
 
-- Fund contract: 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c (LIVE — deployed 2026-11-23)
-- Predicted address (CREATE2, salt 0): 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c
+- HACHI token: 0x0000000000000000000000000000000000000000 (PREVIEW — not deployed yet)
+- Predicted token address (CREATE2, salt 0): 0xb11f494CE956276FcF8E5602f57D70b5b10e79Aa
+- Free fund: 0x0000000000000000000000000000000000000000 (PREVIEW — not deployed yet)
+- Predicted free address (CREATE2, salt 0): 0x3c6CAA75E1da5BA266833325434CDB21c5CE6051
+- Paid fund: 0x0000000000000000000000000000000000000000 (PREVIEW — not deployed yet)
+- Predicted paid address (CREATE2, salt 0): 0x3750e5fd6b9c996f255a1Ec29b961849226a17ef
 - Treasury / owner: 0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa
 - Token: Hachi Fund (HACHI), 18 decimals, BNB Smart Chain (chainId 56)
-- Mint: mint(uint256 shares) payable, exact 0.0015 BNB per share
-- Live count: sharesSold() (0–1,000)
+- Free mint: mintFree(), 0 BNB, 1 per wallet, free cap 1,222
+- Paid mint: mint(uint256 shares) payable, exact 0.0015 BNB per share, paid cap 1,000
+- Live counts: freeSold() (0–1,222) + paidSold() (0–1,000); total = sum
+- Deploy order: token, then free fund, then paid fund. Token deploys
+  owned by the paired wallet 0x05f63E... (interim); it must call
+  setMinter on the token for each fund (2 calls), then transferOwnership
+  to 0x7379...9fa.
+- v1 (0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c) is superseded at 0 mints.
 - X: @HachiFund (https://x.com/HachiFund, account being created)
 - Language: EN + 日本語 (EN primary)
 - No guaranteed price or trading. No wallet connect on the page — mint

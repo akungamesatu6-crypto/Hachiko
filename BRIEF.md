@@ -1,12 +1,14 @@
-# HACHIFUND — Brief
+# HACHIFUND v2 — Brief
 
-**Status: LIVE — contract deployed 2026-11-23, page live at https://hachifund.vercel.app/.**
-Built 2026-11-23 from the user's order: "Buatkan project serupa" (like
-SAFUFUND) "namanya tema dan warna halaman sesuaikan dengan nama Hachiko
-(hachi)". Spec confirmed by the user 2026-11-23 18:19 WIB: "Betul semua
-nya sudah ok, semua pendapatan masuk ke dompet baru sedangkan bayarannya
-kita pakai baw baru" — all revenue to the NEW wallet, payments use the
-new BAW.
+**Status: PREVIEW — v2 contracts NOT deployed. Build done 2026-11-23;
+deploy awaits the user's same-turn "Deploy".**
+Built from the user's order 2026-11-23 19:09 WIB ("1.222 gratis +
+1.000 berbayar") and 19:11 WIB ("Pisahkan saya kontraknya, namun tetap
+dalam satu halaman web" — separate the contracts, still ONE page).
+v2 supersedes v1 (HachiFund `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`,
+deployed 2026-11-23, abandoned at 0 shares sold — v1 is immutable:
+MAX_SHARES 1000 constant, no free-mint function, so it cannot gain a
+free mint).
 
 ## Reference (third-party, inspiration only)
 
@@ -16,8 +18,8 @@ agent, the agent calls `mint(uint256 shares)` on BSC. Verified on-chain
 at study time: contract `0x00c8Fe84695E5456fBaaFEFcd15265da2FD3342B`,
 `sharesSold()` = 181/1,000. SAFUFUND's contract was NOT copied — only its
 observed behaviour (mint/sharesSold, 0.0015 BNB/share → 1,000,000
-tokens/share, 1,000 shares). HachiFund.sol is original code written for
-this project.
+tokens/share, 1,000 shares). HachiFund v1 + v2 code is original, written
+for this project.
 
 ## Identity
 
@@ -28,97 +30,131 @@ this project.
   — tokens that stay, like Hachi.
 - **Colours:** dark brown-black background (#17100a), warm amber/gold
   accents (#e8a33d), cream text. Artwork by Tania: hero Akita at a
-  lantern-lit station at dusk + Akita-face emblem (assets/).
+  lantern-lit station at dusk + Akita-face emblem (assets/, reused
+  unchanged from v1 — no new artwork generated for v2).
 - **Language:** EN + 日本語 (EN primary, JA secondary).
 - **X:** @HachiFund — account NOT yet created; the user creates it.
   The page links https://x.com/HachiFund and labels it honestly.
 - **Chain:** BNB Smart Chain (chainId 56).
 
-## Economics (confirmed — same as SAFUFUND)
+## Economics (v2 — user-confirmed 2026-11-23)
 
 | Item | Value |
 |------|-------|
-| Price | 0.0015 BNB per share (+ gas) |
-| Per share | 1,000,000 $HACHI |
-| Shares total | 1,000 (MAX_SHARES) |
-| Fund full | 1.5 BNB collected, 1,000,000,000 $HACHI minted |
-| Revenue | 100% of every mint forwards to the treasury in the same tx |
+| Free pool | 1,222 shares, 1 per wallet, 0 BNB (`mintFree()`) |
+| Paid pool | 1,000 shares @ 0.0015 BNB each (+ gas) |
+| Per share (free or paid) | 1,000,000 $HACHI |
+| Shares total | 2,222 (MAX_FREE 1,222 + MAX_PAID 1,000) |
+| Fund full | 1.5 BNB collected (paid pool), 2,222,000,000 $HACHI minted |
+| Revenue | 100% of every paid mint forwards to the treasury in the same tx |
 | Treasury / owner | `0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa` (user's NEW wallet) |
 | Fees / royalty | None. No platform fee, no royalty, no tax. |
 | Guaranteed price / market | NONE — stated honestly on the page and in the FAQ. $HACHI trades only if a market exists. |
 
-## Contract (one contract — HachiFund.sol)
+## Contracts (three — HachiToken.sol, HachiFundFree.sol, HachiFundPaid.sol)
 
-ERC20 + Ownable, combined token + fund logic (mirrors SAFUFUND's
-single-contract design). Constructor takes ONE arg: `owner_`.
+One shared HACHI token + two independent fund contracts. Constructor
+args: token(owner); free(token, owner); paid(token, owner). Owner is the
+user's NEW wallet in all three.
 
-- `mint(uint256 shares)` payable: requires shares > 0, `sharesSold +
-  shares <= 1000`, `msg.value == shares * 0.0015 ether` (exact — under-
-  and overpayment both revert). Mints `shares * 1,000,000 HACHI` to the
-  caller, `sharesSold += shares`, emits `SharesMinted(buyer, shares,
-  value)`, then forwards the FULL msg.value to the owner (treasury).
-- `sharesSold()` public view. Views: `maxShares()` (1,000),
-  `pricePerShare()` (0.0015 ether), `tokensPerShare()` (1,000,000e18).
-- No initial mint: total supply = `sharesSold * 1,000,000 HACHI`, max
-  1,000,000,000 HACHI. No minter role — tokens are minted ONLY by mint().
+- **HachiToken** (ERC20 + Ownable): name "Hachi Fund", symbol HACHI,
+  18 decimals, supply starts 0. `setMinter(address, bool)` owner-only
+  registers fund contracts; `mint(address to, uint256 amount)` only
+  registered minters (else `NotMinter`). No pre-mint, no public mint.
+- **HachiFundFree** (Ownable): `mintFree()` — 0 BNB, one share per
+  wallet (`hasClaimedFree` mapping); second claim reverts
+  `AlreadyClaimed`, full pool reverts `FreeSoldOut`. Mints 1,000,000
+  HACHI via the token. Views: `freeSold()` (0–1,222),
+  `maxFreeShares()` (1,222), `hasClaimedFree(address)`,
+  `tokensPerShare()` (1,000,000e18). Non-payable (BNB attached reverts).
+- **HachiFundPaid** (Ownable): `mint(uint256 shares)` payable —
+  requires shares > 0, `paidSold + shares <= 1000`, `msg.value ==
+  shares * 0.0015 ether` (exact — under- and overpayment both revert).
+  Mints `shares * 1,000,000 HACHI` via the token, `paidSold += shares`,
+  emits `SharesMinted(buyer, shares, value)`, then forwards the FULL
+  msg.value to the owner (treasury). Views: `paidSold()` (0–1,000),
+  `maxPaidShares()` (1,000), `pricePerShare()` (0.0015 ether),
+  `tokensPerShare()` (1,000,000e18).
+- Combined: total shares = `freeSold + paidSold` (max 2,222); total
+  HACHI = `(freeSold + paidSold) * 1,000,000`, max 2,222,000,000.
 - **No pause switch, no price change, no cap change** — deliberate,
   minimal like the reference. What deploys is what runs; any change
-  needs a new deployment. Owner can only transferOwnership (Ownable).
-- **No Agent ID gate on mint():** the agent-only flow is enforced by the
-  page/prompt (no wallet connect on the page), exactly like the reference
-  model. Anyone calling the contract directly can mint — honest behaviour
-  of this model, not a bug. Documented here so nobody "fixes" it later.
-- Checks-effects-interactions: sharesSold is updated and tokens minted
-  BEFORE the BNB forward, so a re-entrant call cannot double-spend. No
-  ReentrancyGuard — kept minimal on purpose.
-- Tests: 13/13 pass (`npx hardhat test`).
-- CREATE2 prediction (salt 0, Arachnid proxy
+  needs a new deployment. Owner can only transferOwnership (Ownable)
+  and (token) setMinter.
+- **No Agent ID gate on either mint:** the agent-only flow is enforced
+  by the page/prompt (no wallet connect on the page), exactly like v1.
+  Anyone calling the contracts directly can mint/claim — honest
+  behaviour of this model, not a bug. Documented here so nobody "fixes"
+  it later.
+- Checks-effects-interactions: pool counters and claim flags are updated
+  BEFORE the token mint and (paid) the BNB forward, so a re-entrant call
+  cannot double-spend. No ReentrancyGuard — kept minimal on purpose.
+- Tests: 21/21 pass (`npx hardhat test test/hachifund_v2.test.js`),
+  including the full 1,222-claim free-cap fill. v1 tests still 13/13.
+- CREATE2 predictions (salt 0, Arachnid proxy
   `0x4e59b44847b379578588920cA78FbF26c0B4956C`):
-  **HachiFund `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`**,
-  est. 801,486 gas ≈ 0.0000400743 BNB @ 0.05 gwei. See
-  `contracts/predictions.md` + `contracts/hachifund_inputdata.txt`.
+  **HachiToken `0xb11f494CE956276FcF8E5602f57D70b5b10e79Aa`** (682,565 gas),
+  **HachiFundFree `0x3c6CAA75E1da5BA266833325434CDB21c5CE6051`** (322,242 gas),
+  **HachiFundPaid `0x3750e5fd6b9c996f255a1Ec29b961849226a17ef`** (403,655 gas);
+  total 1,408,462 gas ≈ 0.0000704231 BNB @ 0.05 gwei. See
+  `contracts/hachifund_v2_predictions.md` + the three `*_inputdata.txt`.
 
-## Page (index.html — single page, no market.html)
+## Page (v2/index.html — single page, no market.html)
 
-Minimal like SAFUFUND, Hachiko-styled, mobile-first. Dark brown-black,
-amber/gold accents, cream text. EN + 日本語 toggle (EN default).
+Same Hachiko design as v1 (dark brown-black, amber/gold, cream text),
+EN + 日本語 toggle (EN default). v2 changes only:
 
-Sections: live banner · header (emblem +
-HACHIFUND + EN/日本語 toggle) · hero (hero.jpg, badge "Mint with your
-agent", concept paragraph) · LIVE status (shares sold X/1,000 + progress
-bar + BNB collected, read live on-chain via `sharesSold()` with RPC
-fallback; live state, 0 sold at deploy) · "The HACHI terms" (6 numbered
-points, treasury address SHOWN — an improvement over SAFUFUND, which
-hides it) · "Copy the prompt" (prompt textbox + "Copy prompt: 1 mint" /
-"Copy prompt: 10 mints" buttons; prompt uses the live contract address) · FAQ (5, mirroring SAFUFUND + "Who runs the
-fund?") · footer (X @HachiFund, treasury BscScan link, contract status).
+Sections: PREVIEW banner (v2 contracts not deployed yet) · header
+(emblem + HACHIFUND + EN/日本語 toggle) · hero (hero.jpg, badge "Mint
+with your agent", concept paragraph — now mentions the free share and
+2,222 total) · LIVE status (total sold X/2,222 + progress bar + free
+claimed X/1,222 + paid sold X/1,000 + BNB collected from paid only +
+shares left, read live on-chain via `freeSold()` + `paidSold()` with RPC
+fallback; honest preview state at 0) · "The HACHI terms" (7 numbered
+points, free mint first, split explained, treasury address SHOWN) ·
+"Copy the prompt" (three buttons: "Copy prompt: 1 free mint"
+(mintFree template), "Copy prompt: 1 mint", "Copy prompt: 10 mints"
+(paid templates); default shown prompt is the free mint) · FAQ (7:
+v1's 5 + "How do I get the free share?" + "Why are there two
+contracts?") · footer (X @HachiFund, treasury BscScan link, v2 contract
+status).
 
 Rules kept: NO wallet connect anywhere. NO dead buttons. NO Vercel/GitHub
-mentions on the page. NO invented counts — live counter reads the chain
-and shows its real value (0 sold at deploy). Inline JS passes `node --check`.
+mentions on the page. NO invented counts — live counters read the chain
+and show real values. Inline JS passes `node --check` and was verified
+with a stubbed-DOM functional test (33 checks: preview rendering, live
+reads, prompt templates, EN/JA switch).
 
-## Deploy + wiring (DONE 2026-11-23 ~18:55 WIB)
+## Deploy + wiring (NOT done — needs the user's same-turn "Deploy")
 
-1. Deploy HachiFund via the proxy with `contracts/hachifund_inputdata.txt`.
-2. Wiring: NONE — owner is set in the constructor, mint opens at deploy
-   (no switch). First `mint()` works immediately after the deploy tx.
-3. DONE: placeholder replaced with 0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c in index.html
-   (root + push/), SKILL.md, llms.txt, README.md; verified on BscScan
-   (owner 0x7379...9fa, maxShares 1000, pricePerShare 0.0015 BNB,
-   tokensPerShare 1,000,000, sharesSold = 0); pushed to GitHub (repo
-   Hachiko); Vercel project hachifund live; live page + live counter
-   verified.
-4. Deployed from paired wallet 0x05f63E20097c9360D9D68277b90b4a8A8cF8D7C1
-   (CLI pairing connected that wallet, NOT 0x7379...9fa — user confirmed
-   deploy from it); tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b, block 135266415, cost ~0.000058 BNB;
-   owner is 0x7379...9fa as designed.
+1. Deploy HachiToken via the proxy with `contracts/hachitoken_inputdata.txt`.
+2. Deploy HachiFundFree via the proxy with `contracts/hachifundfree_inputdata.txt`.
+3. Deploy HachiFundPaid via the proxy with `contracts/hachifundpaid_inputdata.txt`.
+4. Wiring (REQUIRED): the token deploys owned by the paired wallet
+   0x05f63E20097c9360D9D68277b90b4a8A8cF8D7C1 (INTERIM — the CLI can only
+   sign as the paired wallet, never as 0x7379...9fa). That wallet calls
+   `setMinter` on the token for EACH fund contract (2 calls), then
+   `transferOwnership(0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa)` —
+   `mintFree()` and `mint()` both revert `NotMinter` until then. Safe:
+   the token owner is not the treasury (paid mints forward BNB to the
+   funds' owner from the first mint). No other wiring: the funds' owner
+   is set in their constructors, minting opens at deploy (no switch).
+5. After deploy + wiring: replace the three zero-address placeholders in
+   v2/index.html, SKILL.md, llms.txt, README.md with the real contract
+   addresses; verify on BscScan (token owner, free maxFreeShares 1,222,
+   paid maxPaidShares 1,000, pricePerShare 0.0015 BNB, tokensPerShare
+   1,000,000, freeSold = 0, paidSold = 0); point the shares watch at the
+   two new fund contracts (it still watches v1); push to GitHub (repo
+   Hachiko); replace the live v1 page on Vercel; verify the live page +
+   live counters.
 
 ## Deliberately left out
 
 - No NFT, no marketplace, no tiers/rarity — this model has none.
 - No presale, no claim contract, no staking, no redemption flow.
-- No live shares-sold count on SAFUFUND — HACHIFUND ADDS it (on-chain read).
+- No Agent ID registry gate — free mint is EOA-tracked (1 per address),
+  same model as v1's public mint.
 - No "not affiliated with Binance" line — not needed here (no Binance
   name is used anywhere in this project).
-- No X account created (user's job), no Vercel project, no GitHub push —
+- No X account created (user's job). No GitHub push, no Vercel change —
   all pending the user's orders.

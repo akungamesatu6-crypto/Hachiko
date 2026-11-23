@@ -1,48 +1,62 @@
-# HACHIFUND
+# HACHIFUND v2
 
-**Status: LIVE — contract deployed 2026-11-23, page live at https://hachifund.vercel.app/.**
+**Status: PREVIEW — v2 contracts NOT deployed. Page v2 staged locally;
+the live v1 page at https://hachifund.vercel.app/ stays until deploy.**
 
 HACHI Fund is a community fund on BNB Smart Chain, Hachiko-themed.
-Mint shares with your agent: **0.0015 BNB per share → 1,000,000 $HACHI**.
-**1,000 shares total** (1.5 BNB when full). When the fund is full, it
-buys tokens with loyal communities — tokens that stay, like Hachi.
+Your first share is **FREE** (1 per wallet); paid shares cost
+**0.0015 BNB each → 1,000,000 $HACHI**. **2,222 shares total: 1,222
+free + 1,000 paid** (1.5 BNB from the paid pool when full). When the
+fund is full, it buys tokens with loyal communities — tokens that stay,
+like Hachi.
 
 - **Token:** Hachi Fund (HACHI), 18 decimals, BNB Smart Chain (chainId 56)
-- **Fund contract:** `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c` (deployed, tx 0x786b413d960bc7a13a6fea550a30b4b5116a6e879de28592b050a78e9be4697b, block 135266415)
-- **Predicted address (CREATE2, salt 0):** `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`
+- **HACHI token:** `0x0000000000000000000000000000000000000000` (PREVIEW placeholder)
+- **Predicted token address (CREATE2, salt 0):** `0xb11f494CE956276FcF8E5602f57D70b5b10e79Aa`
+- **Free fund:** `0x0000000000000000000000000000000000000000` (PREVIEW placeholder)
+- **Predicted free address (CREATE2, salt 0):** `0x3c6CAA75E1da5BA266833325434CDB21c5CE6051`
+- **Paid fund:** `0x0000000000000000000000000000000000000000` (PREVIEW placeholder)
+- **Predicted paid address (CREATE2, salt 0):** `0x3750e5fd6b9c996f255a1Ec29b961849226a17ef`
 - **Treasury / owner:** `0x7379CA652f68fd1daAc11b7b87bb6B222fD129fa`
 - **X:** @HachiFund (https://x.com/HachiFund — account being created)
 - **Language:** EN + 日本語 (EN primary)
 
 ## How it works
 
-There is no wallet connect on the page. Copy the prompt, give it to your
-agent, and it calls `mint(uint256 shares)` on the fund contract. Your
-agent reads `sharesSold()` first, previews the call, waits for your
-"confirm", then shows the tx hash and your new $HACHI balance. Revenue
-forwards to the treasury in the same transaction.
+There is no wallet connect on the page. Copy a prompt, give it to your
+agent, and it calls `mintFree()` on the free contract (free share) or
+`mint(uint256 shares)` on the paid contract (paid shares). Your agent
+reads `freeSold()` / `paidSold()` first, previews the call, waits for
+your "confirm", then shows the tx hash and your new $HACHI balance.
+Paid revenue forwards to the treasury in the same transaction.
 
 ## Honest terms
 
 - No guaranteed price. $HACHI can be traded only if a market exists.
-- Payment goes to the treasury wallet, not into a liquidity pool.
+- Paid mint payment goes to the treasury wallet, not into a liquidity pool.
 - No NFT, no marketplace, no tiers — this model is a fund, not a collection.
 - No pause switch: what deploys is what runs.
+- v1 (HachiFund `0x7b4a3e9D485AC07A6B38C66A9c226a2817d8a34c`) is superseded
+  at 0 shares sold — v1 is immutable and has no free-mint function.
 
 ## Files
 
-- `contracts/` — Hardhat project (HachiFund.sol, 13/13 tests pass,
-  `contracts/predictions.md`, `contracts/hachifund_inputdata.txt`)
-- `index.html` — the single page (EN + 日本語, live shares-sold counter)
-- `assets/` — hero.jpg + emblem.jpg (Hachiko artwork by Tania)
+- `contracts/` — Hardhat project (HachiToken.sol, HachiFundFree.sol,
+  HachiFundPaid.sol; 21/21 v2 tests pass; `contracts/hachifund_v2_predictions.md`
+  + three `*_inputdata.txt` files). v1 HachiFund.sol untouched (13/13 pass).
+- `v2/index.html` — the v2 single page (EN + 日本語, live free/paid counters)
+- `v2/assets/` — hero.jpg + emblem.jpg (Hachiko artwork by Tania, reused from v1)
 - `BRIEF.md` — full spec · `SKILL.md` — agent mint instructions ·
   `llms.txt` — short summary
-- `push/` — byte-identical copies of the page + docs (repo-root layout)
 
 ## Deploy (NOT done)
 
-Deploy the single contract via the Arachnid CREATE2 proxy with
-`contracts/hachifund_inputdata.txt`. No wiring needed — owner is set in
-the constructor and mint opens at deploy. Then fill the real contract
-address into the page + docs, push, and create the hosting project.
-Deploy needs the user's same-turn confirmation.
+Deploy three contracts via the Arachnid CREATE2 proxy, in order:
+token (`hachitoken_inputdata.txt`), free fund (`hachifundfree_inputdata.txt`),
+paid fund (`hachifundpaid_inputdata.txt`). The token deploys owned by the
+paired wallet 0x05f63E... (interim); that wallet MUST call `setMinter`
+on the token for each fund (2 calls), then `transferOwnership` to
+0x7379...9fa — minting reverts `NotMinter` until then. Then fill the
+real contract addresses into the
+page + docs, point the shares watch at the two new fund contracts, push,
+and replace the live v1 page. Deploy needs the user's same-turn confirmation.
